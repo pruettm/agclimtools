@@ -8,9 +8,9 @@ Authors@R:
            email = "matthew.pruett@wsu.edu",
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: Agclimtools aims to provide a set of functions for reading and 
-manipulating climate data. The core functionality of this package is to 
-read binary weather data and provide functions for converting solar radiation 
-and temperature from daily to hourly.
+    manipulating climate data. The core functionality of this package is to 
+    read binary weather data and provide functions for converting solar radiation 
+    and temperature from daily to hourly.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
