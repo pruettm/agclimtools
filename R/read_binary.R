@@ -45,8 +45,7 @@ read_binary_addmdy_4var <- function(filename, ymd) {
   Nofvariables <- 4 # number of variables or column in the forcing data file
   Nrecords <- nrow(ymd)
   ind <- seq(1, Nrecords * Nofvariables, Nofvariables)
-  fileCon <- file(filename, "rb")
-  temp <- readBin(fileCon, integer(),
+  temp <- readBin(filename, integer(),
                   size = 2,
                   n = Nrecords * Nofvariables,
                   endian="little")
@@ -58,7 +57,6 @@ read_binary_addmdy_4var <- function(filename, ymd) {
 
   AllData <- cbind(ymd, dataM)
   colnames(AllData) <- c("date", "precip", "Tmax", "Tmin", "windspeed")
-  close(fileCon)
   return(AllData)
 }
 
@@ -73,8 +71,7 @@ read_binary_addmdy_8var <- function(filename, ymd){
   Nofvariables <- 8 # number of variables or column in the forcing data file
   Nrecords <- nrow(ymd)
   ind <- seq(1, Nrecords * Nofvariables, Nofvariables)
-  fileCon <- file(filename, "rb")
-  temp <- readBin(fileCon, integer(),
+  temp <- readBin(filename, integer(),
                   size = 2,
                   n = Nrecords * Nofvariables,
                   endian = "little")
@@ -90,6 +87,5 @@ read_binary_addmdy_8var <- function(filename, ymd){
   AllData <- cbind(ymd, dataM)
   colnames(AllData) <- c("date", "precip", "tmax", "tmin",
                          "windspeed", "SPH", "SRAD", "Rmax", "Rmin")
-  close(fileCon)
   return(AllData)
 }
