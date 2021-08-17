@@ -2,6 +2,8 @@
 
 export(add_hourly_temps)
 export(add_sunrise_sunset)
+export(clear_sky)
+export(extrat)
 export(hourly_temp)
 export(read_binary)
 export(temp_after_sunrise)
