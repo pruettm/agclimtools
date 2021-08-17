@@ -67,5 +67,8 @@ extrat <- function(hour, doy, lat, long, time_zone_long, freq_h = 1){
   Ra <- 12*60/pi*0.082*dr*((w2 - w1)*sin(lat_r)*sin(SD) +
                              cos(lat_r)*cos(SD)*(sin(w2) - sin(w1)))
   Ra <- 1000000/60/60/freq_h*Ra
+
+  Ra <- ifelse(Ra < 0, 0, Ra)
+
   return(Ra)
 }
