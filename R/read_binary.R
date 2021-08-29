@@ -10,83 +10,58 @@
 #'
 read_binary <- function(file_path, num_vars, hist){
 
+  # set hist from file name if missing
   if (missing(hist)) {hist <- grepl("hist", file_path)}
 
+   # Check hist and set date range
   if (hist){
-    start_year <- 1950
-    end_year <- 2005
+    ymd_file <- data.frame(date = seq.Date(as.Date("1950/01/01"),
+                                           as.Date("2005/12/31"),
+                                           by = "day"))
   } else {
-    start_year <- 2006
-    end_year <- 2099
+    ymd_file <- data.frame(date = seq.Date(as.Date("2006/01/01"),
+                                           as.Date("2099/12/31"),
+                                           by = "day"))
   }
 
-  ymd_file <- data.frame(date = seq.Date(as.Date(paste0(start_year, "/01/01")),
-                                         as.Date(paste0(end_year, "/12/31")),
-                                         by = "day"))
-
+  # Read Data
   if (num_vars == 4) {
-    data <- read_binary_addmdy_4var(file_path, ymd_file)
+    Nrecords <- nrow(ymd_file)
+    ind <- seq(1, Nrecords * num_vars, num_vars)
+    temp <- readBin(filename, integer(),
+                    size = 2,
+                    n = Nrecords * num_vars,
+                    endian="little")
+    dataM <- matrix(0, Nrecords, num_vars)
+    dataM[1:Nrecords, 1] <- temp[ind] / 40.00       # precip data
+    dataM[1:Nrecords, 2] <- temp[ind + 1] / 100.00  # Max temperature data
+    dataM[1:Nrecords, 3] <- temp[ind + 2] / 100.00  # Min temperature data
+    dataM[1:Nrecords, 4] <- temp[ind + 3] / 100.00  # Wind speed data
+
+    data <- cbind(ymd_file, dataM)
+    colnames(data) <- c("date", "precip", "tmax", "tmin", "windspeed")
   } else if (num_vars == 8) {
-    data <- read_binary_addmdy_8var(file_path, ymd_file)
+    Nrecords <- nrow(ymd_file)
+    ind <- seq(1, Nrecords * num_vars, num_vars)
+    temp <- readBin(filename, integer(),
+                    size = 2,
+                    n = Nrecords * num_vars,
+                    endian = "little")
+    dataM <- matrix(0, Nrecords, num_vars)
+    dataM[1:Nrecords, 1] <- temp[ind] / 40.00         # precip data
+    dataM[1:Nrecords, 2] <- temp[ind + 1] / 100.00    # Max temperature data
+    dataM[1:Nrecords, 3] <- temp[ind + 2] / 100.00    # Min temperature data
+    dataM[1:Nrecords, 4] <- temp[ind + 3] / 100.00    # Wind speed data
+    dataM[1:Nrecords, 5] <- temp[ind + 4] / 10000.00  # SPH
+    dataM[1:Nrecords, 6] <- temp[ind + 5] / 40.00     # SRAD
+    dataM[1:Nrecords, 7] <- temp[ind + 6] / 100.00    # Rmax
+    dataM[1:Nrecords, 8] <- temp[ind + 7] / 100.00    # RMin
+    data <- cbind(ymd_file, dataM)
+    colnames(data) <- c("date", "precip", "tmax", "tmin",
+                           "windspeed", "SPH", "SRAD", "Rmax", "Rmin")
   } else {
     stop("Please set number of variables in file")
   }
 
   return(data)
-}
-
-#' Read files with 4 variables
-#'
-#' @param filename path to file loaction
-#' @param ymd date column
-#'
-#' @return binary data
-#'
-read_binary_addmdy_4var <- function(filename, ymd) {
-  Nofvariables <- 4 # number of variables or column in the forcing data file
-  Nrecords <- nrow(ymd)
-  ind <- seq(1, Nrecords * Nofvariables, Nofvariables)
-  temp <- readBin(filename, integer(),
-                  size = 2,
-                  n = Nrecords * Nofvariables,
-                  endian="little")
-  dataM <- matrix(0, Nrecords, Nofvariables)
-  dataM[1:Nrecords, 1] <- temp[ind] / 40.00       # precip data
-  dataM[1:Nrecords, 2] <- temp[ind + 1] / 100.00  # Max temperature data
-  dataM[1:Nrecords, 3] <- temp[ind + 2] / 100.00  # Min temperature data
-  dataM[1:Nrecords, 4] <- temp[ind + 3] / 100.00  # Wind speed data
-
-  AllData <- cbind(ymd, dataM)
-  colnames(AllData) <- c("date", "precip", "Tmax", "Tmin", "windspeed")
-  return(AllData)
-}
-
-#' Read files with 8 variables
-#'
-#' @param filename path to file loaction
-#' @param ymd date column
-#'
-#' @return binary data
-#'
-read_binary_addmdy_8var <- function(filename, ymd){
-  Nofvariables <- 8 # number of variables or column in the forcing data file
-  Nrecords <- nrow(ymd)
-  ind <- seq(1, Nrecords * Nofvariables, Nofvariables)
-  temp <- readBin(filename, integer(),
-                  size = 2,
-                  n = Nrecords * Nofvariables,
-                  endian = "little")
-  dataM <- matrix(0, Nrecords, Nofvariables)
-  dataM[1:Nrecords, 1] <- temp[ind] / 40.00         # precip data
-  dataM[1:Nrecords, 2] <- temp[ind + 1] / 100.00    # Max temperature data
-  dataM[1:Nrecords, 3] <- temp[ind + 2] / 100.00    # Min temperature data
-  dataM[1:Nrecords, 4] <- temp[ind + 3] / 100.00    # Wind speed data
-  dataM[1:Nrecords, 5] <- temp[ind + 4] / 10000.00  # SPH
-  dataM[1:Nrecords, 6] <- temp[ind + 5] / 40.00     # SRAD
-  dataM[1:Nrecords, 7] <- temp[ind + 6] / 100.00    # Rmax
-  dataM[1:Nrecords, 8] <- temp[ind + 7] / 100.00    # RMin
-  AllData <- cbind(ymd, dataM)
-  colnames(AllData) <- c("date", "precip", "tmax", "tmin",
-                         "windspeed", "SPH", "SRAD", "Rmax", "Rmin")
-  return(AllData)
 }
