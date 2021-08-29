@@ -31,6 +31,7 @@ read_binary <- function(file_path, num_vars, hist){
   } else {
     stop("Please set number of variables in file")
   }
+
   return(data)
 }
 
@@ -49,7 +50,7 @@ read_binary_addmdy_4var <- function(filename, ymd) {
                   size = 2,
                   n = Nrecords * Nofvariables,
                   endian="little")
-  dataM <- matrix(0, Nrecords, 4)
+  dataM <- matrix(0, Nrecords, Nofvariables)
   dataM[1:Nrecords, 1] <- temp[ind] / 40.00       # precip data
   dataM[1:Nrecords, 2] <- temp[ind + 1] / 100.00  # Max temperature data
   dataM[1:Nrecords, 3] <- temp[ind + 2] / 100.00  # Min temperature data
@@ -75,7 +76,7 @@ read_binary_addmdy_8var <- function(filename, ymd){
                   size = 2,
                   n = Nrecords * Nofvariables,
                   endian = "little")
-  dataM <- matrix(0, Nrecords, 8)
+  dataM <- matrix(0, Nrecords, Nofvariables)
   dataM[1:Nrecords, 1] <- temp[ind] / 40.00         # precip data
   dataM[1:Nrecords, 2] <- temp[ind + 1] / 100.00    # Max temperature data
   dataM[1:Nrecords, 3] <- temp[ind + 2] / 100.00    # Min temperature data
