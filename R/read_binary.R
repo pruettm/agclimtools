@@ -28,7 +28,7 @@ read_binary <- function(file_path, num_vars, hist){
   if (num_vars == 4) {
     Nrecords <- nrow(ymd_file)
     ind <- seq(1, Nrecords * num_vars, num_vars)
-    temp <- readBin(filename, integer(),
+    temp <- readBin(file_path, integer(),
                     size = 2,
                     n = Nrecords * num_vars,
                     endian="little")
@@ -43,7 +43,7 @@ read_binary <- function(file_path, num_vars, hist){
   } else if (num_vars == 8) {
     Nrecords <- nrow(ymd_file)
     ind <- seq(1, Nrecords * num_vars, num_vars)
-    temp <- readBin(filename, integer(),
+    temp <- readBin(file_path, integer(),
                     size = 2,
                     n = Nrecords * num_vars,
                     endian = "little")
