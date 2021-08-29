@@ -67,6 +67,7 @@ read_binary <- function(file_path, num_vars, hist, id = NULL){
 
   if (!is.null(id)) {
     data <- cbind(id = file_path, data)
+    colnames(data)[1] <- id
   }
 
   return(data)
