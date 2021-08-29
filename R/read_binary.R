@@ -4,7 +4,9 @@
 #' @param num_vars number of variables in data set either 8 or 4
 #' @param hist boolean representing time frame of data TRUE for historical
 #' FALSE for future if missing hist will be detected oin file path
-#'
+#' @param id Either a string or 'NULL'. If a string, the output will contain
+#' a variable with that name with the filename(s) as the value.
+#' If 'NULL', the default, no variable will be created.
 #' @return a matrix with date and either 4 or 8 environmental variables
 #' @export
 #'
@@ -61,6 +63,10 @@ read_binary <- function(file_path, num_vars, hist){
                            "windspeed", "SPH", "SRAD", "Rmax", "Rmin")
   } else {
     stop("Please set number of variables in file")
+  }
+
+  if (!is.null(id)) {
+    cbind(id = file_path, data)
   }
 
   return(data)
