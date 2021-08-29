@@ -10,7 +10,7 @@
 #' @return a matrix with date and either 4 or 8 environmental variables
 #' @export
 #'
-read_binary <- function(file_path, num_vars, hist, id){
+read_binary <- function(file_path, num_vars, hist, id = NULL){
 
   # set hist from file name if missing
   if (missing(hist)) {hist <- grepl("hist", file_path)}

@@ -4,7 +4,7 @@
 \alias{read_binary}
 \title{Reads a binary weather file}
 \usage{
-read_binary(file_path, num_vars, hist, id)
+read_binary(file_path, num_vars, hist, id = NULL)
 }
 \arguments{
 \item{file_path}{path to file location}
