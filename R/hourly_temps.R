@@ -76,7 +76,7 @@ hourly_temp <-
     #               temp_after_sunrise(hour, tmin, tmax, sunrise, sunset),
     #             hour > sunset ~
     #               temp_after_sunset(hour, tmin, tmax, tmin_next,
-    #                                 sunrise, sunset, sunrise_next)) |>
+    #                                 sunrise, sunset, sunrise_next)) %>%
     #   suppressWarnings()
 
     t_before_sunrise <- temp_after_sunset(hour + 24, tmin_prev, tmax_prev,
@@ -110,7 +110,7 @@ hourly_temp <-
 #'
 #' @importFrom rlang .data
 add_sunrise_sunset <- function(data, lat){
-  data |>
+  data %>%
     dplyr::mutate(gamma = 2*pi/365*((.data$doy)-1),
            delta =
              180/pi*(0.006918 - 0.399912*cos(.data$gamma) +0.070257*sin(.data$gamma) -
@@ -120,7 +120,7 @@ add_sunrise_sunset <- function(data, lat){
              (sin(-0.8333/360*2*pi) - sin(lat/360*2*pi)*sin(.data$delta/360*2*pi))/
              (cos(lat/360*2*pi)*cos(.data$delta/360*2*pi)),
            sunrise = 12 - acos(.data$cos_wo)/(15/360*2*pi),
-           sunset = 12 + acos(.data$cos_wo)/(15/360*2*pi)) |>
+           sunset = 12 + acos(.data$cos_wo)/(15/360*2*pi)) %>%
     dplyr::select(-.data$gamma, -.data$delta, -.data$cos_wo)
 }
 
@@ -134,13 +134,13 @@ add_sunrise_sunset <- function(data, lat){
 #' @export
 #'
 #' @examples data.frame(date = seq(as.Date("2000/1/1"), as.Date("2000/1/3"), "days"),
-#' tmin = c(1, 2, 6), tmax = c(10, 12, 15)) |> add_hourly_temps(lat = 45, hours = 0:23)
+#' tmin = c(1, 2, 6), tmax = c(10, 12, 15)) %>% add_hourly_temps(lat = 45, hours = 0:23)
 #'
 #' @importFrom rlang .data
 add_hourly_temps <- function(data, lat, hours) {
-  data |>
-    dplyr::mutate(doy = lubridate::yday(date)) |>
-    add_sunrise_sunset(lat = lat) |>
+  data %>%
+    dplyr::mutate(doy = lubridate::yday(date)) %>%
+    add_sunrise_sunset(lat = lat) %>%
     dplyr::mutate(
       sunrise_prev = dplyr::lag(.data$sunrise),
       sunset_prev = dplyr::lag(.data$sunset),
@@ -148,8 +148,8 @@ add_hourly_temps <- function(data, lat, hours) {
       tmin_prev = dplyr::lag(.data$tmin),
       tmax_prev = dplyr::lag(.data$tmax),
       tmin_next = dplyr::lead(.data$tmin)
-    ) |>
-    tidyr::expand_grid(hour = hours) |>
+    ) %>%
+    tidyr::expand_grid(hour = hours) %>%
     dplyr::mutate(
       temp = hourly_temp(
         .data$hour,
@@ -164,7 +164,7 @@ add_hourly_temps <- function(data, lat, hours) {
         .data$sunset_prev,
         .data$sunrise_next
       )
-    ) |>
+    ) %>%
     dplyr::select(-.data$sunrise, -.data$sunset, -.data$sunrise_prev,
                   -.data$sunset_prev, -.data$sunrise_next, -.data$tmin_prev,
                   -.data$tmax_prev, -.data$tmin_next
