@@ -79,18 +79,21 @@ hourly_temp <-
     #                                 sunrise, sunset, sunrise_next)) |>
     #   suppressWarnings()
 
+    t_before_sunrise <- temp_after_sunset(hour + 24, tmin_prev, tmax_prev,
+                      tmin, sunrise_prev, sunset_prev, sunrise)
+
+    t_after_sunrise <- temp_after_sunrise(hour, tmin, tmax, sunrise, sunset)
+
+    t_after_sunset <- temp_after_sunset(hour, tmin, tmax, tmin_next,
+                      sunrise, sunset, sunrise_next)
+
     temp <- rep(NA, length(hour))
 
-    temp[hour <= sunrise] <-
-      temp_after_sunset(hour + 24, tmin_prev, tmax_prev,
-                        tmin, sunrise_prev, sunset_prev, sunrise)
+    temp[hour <= sunrise] <- t_before_sunrise[hour <= sunrise]
 
-    temp[hour <= sunset] <-
-      temp_after_sunrise(hour, tmin, tmax, sunrise, sunset)
+    temp[hour <= sunset] <- t_after_sunrise[hour <= sunset]
 
-    temp[hour > sunset] <-
-      temp_after_sunset(hour, tmin, tmax, tmin_next,
-                        sunrise, sunset, sunrise_next)
+    temp[hour > sunset] <- t_after_sunset[hour > sunset]
 
     return(temp)
   }
