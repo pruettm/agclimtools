@@ -68,16 +68,29 @@ hourly_temp <-
            tmin_next, sunrise, sunset, sunrise_prev,
            sunset_prev, sunrise_next){
 
-    temp <-
-      dplyr::case_when(hour <= sunrise ~
-                  temp_after_sunset(hour + 24, tmin_prev, tmax_prev, tmin,
-                                    sunrise_prev, sunset_prev, sunrise),
-                hour <= sunset ~
-                  temp_after_sunrise(hour, tmin, tmax, sunrise, sunset),
-                hour > sunset ~
-                  temp_after_sunset(hour, tmin, tmax, tmin_next,
-                                    sunrise, sunset, sunrise_next)) |>
-      suppressWarnings()
+    # temp <-
+    #   dplyr::case_when(hour <= sunrise ~
+    #               temp_after_sunset(hour + 24, tmin_prev, tmax_prev, tmin,
+    #                                 sunrise_prev, sunset_prev, sunrise),
+    #             hour <= sunset ~
+    #               temp_after_sunrise(hour, tmin, tmax, sunrise, sunset),
+    #             hour > sunset ~
+    #               temp_after_sunset(hour, tmin, tmax, tmin_next,
+    #                                 sunrise, sunset, sunrise_next)) |>
+    #   suppressWarnings()
+
+    temp <- rep(NA, length(hour))
+
+    temp[hour <= sunrise] <-
+      temp_after_sunset(hour + 24, tmin_prev, tmax_prev,
+                        tmin, sunrise_prev, sunset_prev, sunrise)
+
+    temp[hour <= sunset] <-
+      temp_after_sunrise(hour, tmin, tmax, sunrise, sunset)
+
+    temp[hour > sunset] <-
+      temp_after_sunset(hour, tmin, tmax, tmin_next,
+                        sunrise, sunset, sunrise_next)
 
     return(temp)
   }
