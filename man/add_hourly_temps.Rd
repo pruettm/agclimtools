@@ -21,6 +21,6 @@ Add hourly temps to data frame
 }
 \examples{
 data.frame(date = seq(as.Date("2000/1/1"), as.Date("2000/1/3"), "days"),
-tmin = c(1, 2, 6), tmax = c(10, 12, 15)) |> add_hourly_temps(lat = 45, hours = 0:23)
+tmin = c(1, 2, 6), tmax = c(10, 12, 15)) \%>\% add_hourly_temps(lat = 45, hours = 0:23)
 
 }

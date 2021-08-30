@@ -21,5 +21,6 @@ BugReports: https://github.com/pruettm/agclimtools/issues
 Imports: 
     dplyr,
     lubridate,
+    magrittr,
     rlang,
     tidyr
