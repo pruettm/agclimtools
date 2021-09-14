@@ -77,7 +77,7 @@ read_binary <- function(file_path, num_vars, hist, id = NULL){
 #' @param id Either a string or 'NULL'. If a string, the output will contain
 #' a variable with that name with the filename(s) as the value.
 #' If 'NULL', the default, no variable will be created.
-#' @return a data frame with date and 4 environmental variables
+#' @return a data frame with date and 8 environmental variables
 #' @export
 #'
 read_gridmet <- function(file_path, begin = 1979, end = 2019, id = NULL){
@@ -90,19 +90,23 @@ read_gridmet <- function(file_path, begin = 1979, end = 2019, id = NULL){
 
   # Read Data
   Nrecords <- nrow(ymd_file)
-  ind <- seq(1, Nrecords * 4, 4)
+  ind <- seq(1, Nrecords * 8, 8)
   temp <- readBin(file_path, integer(),
                   size = 2,
-                  n = Nrecords * 4,
+                  n = Nrecords * 8,
                   endian="little")
-  dataM <- matrix(0, Nrecords, 4)
-  dataM[1:Nrecords, 1] <- temp[ind] / 40.00       # precip data
-  dataM[1:Nrecords, 2] <- temp[ind + 1] / 100.00  # Max temperature data
-  dataM[1:Nrecords, 3] <- temp[ind + 2] / 100.00  # Min temperature data
-  dataM[1:Nrecords, 4] <- temp[ind + 3] / 100.00  # Wind speed data
-
+  dataM <- matrix(0, Nrecords, 8)
+  dataM[1:Nrecords, 1] <- temp[ind] / 40.00         # precip data
+  dataM[1:Nrecords, 2] <- temp[ind + 1] / 100.00    # Max temperature data
+  dataM[1:Nrecords, 3] <- temp[ind + 2] / 100.00    # Min temperature data
+  dataM[1:Nrecords, 4] <- temp[ind + 3] / 100.00    # Wind speed data
+  dataM[1:Nrecords, 5] <- temp[ind + 4] / 10000.00  # SPH
+  dataM[1:Nrecords, 6] <- temp[ind + 5] / 40.00     # SRAD
+  dataM[1:Nrecords, 7] <- temp[ind + 6] / 100.00    # Rmax
+  dataM[1:Nrecords, 8] <- temp[ind + 7] / 100.00    # RMin
   data <- cbind(ymd_file, dataM)
-  colnames(data) <- c("date", "precip", "tmax", "tmin", "windspeed")
+  colnames(data) <- c("date", "precip", "tmax", "tmin",
+                      "windspeed", "SPH", "SRAD", "Rmax", "Rmin")
 
   if (!is.null(id)) {
     data <- cbind(id = file_path, data)
