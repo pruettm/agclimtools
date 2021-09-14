@@ -18,7 +18,7 @@ a variable with that name with the filename(s) as the value.
 If 'NULL', the default, no variable will be created.}
 }
 \value{
-a data frame with date and 4 environmental variables
+a data frame with date and 8 environmental variables
 }
 \description{
 Reads a GRIDMET binary weather file
