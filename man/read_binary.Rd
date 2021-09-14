@@ -12,14 +12,14 @@ read_binary(file_path, num_vars, hist, id = NULL)
 \item{num_vars}{number of variables in data set either 8 or 4}
 
 \item{hist}{boolean representing time frame of data TRUE for historical
-FALSE for future if missing hist will be detected oin file path}
+FALSE for future if missing hist will be detected in file path}
 
 \item{id}{Either a string or 'NULL'. If a string, the output will contain
 a variable with that name with the filename(s) as the value.
 If 'NULL', the default, no variable will be created.}
 }
 \value{
-a matrix with date and either 4 or 8 environmental variables
+a data frame with date and either 4 or 8 environmental variables
 }
 \description{
 Reads a binary weather file

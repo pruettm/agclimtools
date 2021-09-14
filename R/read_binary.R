@@ -3,17 +3,18 @@
 #' @param file_path path to file location
 #' @param num_vars number of variables in data set either 8 or 4
 #' @param hist boolean representing time frame of data TRUE for historical
-#' FALSE for future if missing hist will be detected oin file path
+#' FALSE for future if missing hist will be detected in file path
 #' @param id Either a string or 'NULL'. If a string, the output will contain
 #' a variable with that name with the filename(s) as the value.
 #' If 'NULL', the default, no variable will be created.
-#' @return a matrix with date and either 4 or 8 environmental variables
+#' @return a data frame with date and either 4 or 8 environmental variables
 #' @export
 #'
 read_binary <- function(file_path, num_vars, hist, id = NULL){
 
   # set hist from file name if missing
   if (missing(hist)) {hist <- grepl("hist", file_path)}
+  if (missing(num_vars)) {stop("Please set number of variables in file")}
 
    # Check hist and set date range
   if (hist){
@@ -27,14 +28,16 @@ read_binary <- function(file_path, num_vars, hist, id = NULL){
   }
 
   # Read Data
+  Nrecords <- nrow(ymd_file)
+  ind <- seq(1, Nrecords * num_vars, num_vars)
+  temp <- readBin(file_path, integer(),
+                  size = 2,
+                  n = Nrecords * num_vars,
+                  endian="little")
+  dataM <- matrix(0, Nrecords, num_vars)
+
+  # Scale values
   if (num_vars == 4) {
-    Nrecords <- nrow(ymd_file)
-    ind <- seq(1, Nrecords * num_vars, num_vars)
-    temp <- readBin(file_path, integer(),
-                    size = 2,
-                    n = Nrecords * num_vars,
-                    endian="little")
-    dataM <- matrix(0, Nrecords, num_vars)
     dataM[1:Nrecords, 1] <- temp[ind] / 40.00       # precip data
     dataM[1:Nrecords, 2] <- temp[ind + 1] / 100.00  # Max temperature data
     dataM[1:Nrecords, 3] <- temp[ind + 2] / 100.00  # Min temperature data
@@ -42,14 +45,8 @@ read_binary <- function(file_path, num_vars, hist, id = NULL){
 
     data <- cbind(ymd_file, dataM)
     colnames(data) <- c("date", "precip", "tmax", "tmin", "windspeed")
+
   } else if (num_vars == 8) {
-    Nrecords <- nrow(ymd_file)
-    ind <- seq(1, Nrecords * num_vars, num_vars)
-    temp <- readBin(file_path, integer(),
-                    size = 2,
-                    n = Nrecords * num_vars,
-                    endian = "little")
-    dataM <- matrix(0, Nrecords, num_vars)
     dataM[1:Nrecords, 1] <- temp[ind] / 40.00         # precip data
     dataM[1:Nrecords, 2] <- temp[ind + 1] / 100.00    # Max temperature data
     dataM[1:Nrecords, 3] <- temp[ind + 2] / 100.00    # Min temperature data
@@ -61,9 +58,51 @@ read_binary <- function(file_path, num_vars, hist, id = NULL){
     data <- cbind(ymd_file, dataM)
     colnames(data) <- c("date", "precip", "tmax", "tmin",
                            "windspeed", "SPH", "SRAD", "Rmax", "Rmin")
-  } else {
-    stop("Please set number of variables in file")
   }
+
+  if (!is.null(id)) {
+    data <- cbind(id = file_path, data)
+    colnames(data)[1] <- id
+  }
+
+  return(data)
+}
+
+
+#' Reads a GRIDMET binary weather file
+#'
+#' @param file_path path to file location
+#' @param begin beginning year of data
+#' @param end ending year of data
+#' @param id Either a string or 'NULL'. If a string, the output will contain
+#' a variable with that name with the filename(s) as the value.
+#' If 'NULL', the default, no variable will be created.
+#' @return a data frame with date and 4 environmental variables
+#' @export
+#'
+read_gridmet <- function(file_path, begin = 1979, end = 2019, id = NULL){
+
+
+  ymd_file <- data.frame(date = seq.Date(as.Date(paste0(begin, "/01/01")),
+                                         as.Date(paste0(end, "/12/31")),
+                                         by = "day"))
+
+
+  # Read Data
+  Nrecords <- nrow(ymd_file)
+  ind <- seq(1, Nrecords * 4, 4)
+  temp <- readBin(file_path, integer(),
+                  size = 2,
+                  n = Nrecords * 4,
+                  endian="little")
+  dataM <- matrix(0, Nrecords, 4)
+  dataM[1:Nrecords, 1] <- temp[ind] / 40.00       # precip data
+  dataM[1:Nrecords, 2] <- temp[ind + 1] / 100.00  # Max temperature data
+  dataM[1:Nrecords, 3] <- temp[ind + 2] / 100.00  # Min temperature data
+  dataM[1:Nrecords, 4] <- temp[ind + 3] / 100.00  # Wind speed data
+
+  data <- cbind(ymd_file, dataM)
+  colnames(data) <- c("date", "precip", "tmax", "tmin", "windspeed")
 
   if (!is.null(id)) {
     data <- cbind(id = file_path, data)
