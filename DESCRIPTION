@@ -22,5 +22,8 @@ Imports:
     dplyr,
     lubridate,
     magrittr,
+    purrr,
     rlang,
+    ssh,
+    stringr,
     tidyr
