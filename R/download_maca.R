@@ -9,6 +9,12 @@
 #' @examples \dontrun{download_maca("data_36.65625_-121.65625", "data", "matthew.pruett")}
 download_maca <- function(location, data_folder, kamiak_user_name){
 
+  if (!requireNamespace("ssh", quietly = TRUE)) {
+    warning("The ssh package must be installed to use this functionality")
+    #Either exit or do something without rgl
+    return(NULL)
+  }
+
   # check if data folder exist and create if missing
   if(!dir.exists(data_folder)) {dir.create(data_folder)}
 

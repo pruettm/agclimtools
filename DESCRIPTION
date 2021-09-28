@@ -24,6 +24,5 @@ Imports:
     magrittr,
     purrr,
     rlang,
-    ssh,
     stringr,
     tidyr
