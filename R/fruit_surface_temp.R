@@ -2,7 +2,7 @@
 #'
 #' @param t_air Air temperature (°C)
 #' @param wind_speed Wind speed (m/s)
-#' @param s_rad solar radiation (W/m^2)
+#' @param s_rad Solar radiation (W/m^2)
 #' @param t_dew Dew point temperature (°C)
 #' @param t_ground Ground temperature (°C), defaults to air temperature
 #' @param ground_emissivity Ground emissivity, default 0.97

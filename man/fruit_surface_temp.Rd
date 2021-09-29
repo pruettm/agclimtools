@@ -26,7 +26,7 @@ fruit_surface_temp(
 
 \item{wind_speed}{Wind speed (m/s)}
 
-\item{s_rad}{solar radiation (W/m^2)}
+\item{s_rad}{Solar radiation (W/m^2)}
 
 \item{t_dew}{Dew point temperature (°C)}
 
