@@ -26,3 +26,5 @@ Imports:
     rlang,
     stringr,
     tidyr
+Suggests: 
+    ssh
