@@ -28,3 +28,5 @@ Imports:
     tidyr
 Suggests: 
     ssh
+Depends: 
+    R (>= 2.10)
