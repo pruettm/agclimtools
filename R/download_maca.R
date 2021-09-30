@@ -16,24 +16,16 @@ download_maca <- function(location, data_folder, kamiak_user_name){
     # connect to kamiak (prompts user password)
     session <- ssh::ssh_connect(paste0(kamiak_user_name, "@kamiak.wsu.edu"))
 
-    # define all models and climate projections
-    models <- c("bcc-csm1-1", "BNU-ESM", "CanESM2", "CNRM-CM5", "CSIRO-Mk3-6-0",
-                "GFDL-ESM2G", "GFDL-ESM2M", "HadGEM2-CC365", "HadGEM2-ES365",
-                "inmcm4",  "IPSL-CM5A-LR", "IPSL-CM5A-MR", "IPSL-CM5B-LR",
-                "MIROC5",  "MIROC-ESM", "MIROC-ESM-CHEM")
-
-    climate_proj <- c("historical", "rcp45", "rcp85")
-
     # build folder structure
-    tidyr::expand_grid(models, climate_proj) %>%
-      dplyr::mutate(path = paste(data_folder, models, climate_proj, sep = "/")) %>%
+    tidyr::expand_grid(models = agclimtools::maca_models, climate_proj = agclimtools::climate_projections) %>%
+      dplyr::mutate(path = paste(data_folder, .data$models, .data$climate_proj, sep = "/")) %>%
       dplyr::pull(.data$path) %>%
       purrr::walk(function(x){if(!dir.exists(x)){dir.create(x, recursive = TRUE)}})
 
 
-    df <- tidyr::expand_grid(models, climate_proj, location) %>%
-      dplyr::mutate(local_path = file.path(data_folder, models, climate_proj, "."),
-                    server_path = file.path(kamiak_maca_path(location), models, climate_proj, location))
+    df <- tidyr::expand_grid(models = agclimtools::maca_models, climate_proj = agclimtools::climate_projections, location) %>%
+      dplyr::mutate(local_path = file.path(data_folder, .data$models, .data$climate_proj, "."),
+                    server_path = file.path(kamiak_maca_path(location), .data$models, .data$climate_proj, location))
 
     purrr::walk2(df$server_path, df$local_path, ssh::scp_download, session = session)
 

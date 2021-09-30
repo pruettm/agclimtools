@@ -10,8 +10,9 @@ A data frame with 4218330 rows and 2 variables:
 \item{location}{file name of maca grid cell with format "data_lat_long"}
 \item{cdl_code_2020}{Crop Code from the 2020 cdl contained within each location}
 }
-
-#' @source \url{https://www.nass.usda.gov/Research_and_Science/Cropland/Release/index.php}
+}
+\source{
+\url{https://www.nass.usda.gov/Research_and_Science/Cropland/Release/index.php}
 }
 \usage{
 maca_2020_cdl
