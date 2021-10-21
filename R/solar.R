@@ -68,7 +68,7 @@ extrat <- function(hour, doy, lat, long, time_zone_long, freq_h = 1){
                              cos(lat_r)*cos(SD)*(sin(w2) - sin(w1)))
   Ra <- 1000000/60/60/freq_h*Ra
 
-  Ra <- ifelse(Ra < 0, 0, Ra)
+  Ra <- ifelse(Ra < 0 | is.infinite(Rso), 0, Ra)
 
   return(Ra)
 }
