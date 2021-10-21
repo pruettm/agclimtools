@@ -23,8 +23,7 @@
 #' @return Fruit surface temperature (°C)
 #' @export
 #'
-#' @examples fruit_surface_temp(t_air = 33, wind_speed = 1,
-#' s_rad = 800, t_dew = 30)
+#' @examples fruit_surface_temp(t_air = 33, wind_speed = 1, s_rad = 800, t_dew = 30)
 fruit_surface_temp <-
   function(t_air,
            wind_speed,
@@ -39,7 +38,7 @@ fruit_surface_temp <-
            fruit_groundlit_prop = 0,
            fruit_surface_conductance = 5E-5,
            print_all_vars = FALSE,
-           possibly = TRUE){
+           possibly = FALSE){
 
     # Constants #####
     stefan_boltzmann <- 5.67E-8 #Wm^-2T^-4
@@ -99,13 +98,15 @@ fruit_surface_temp <-
     }
 
     solve <- function(a_0, a_4){
-
-      sol <- polyroot(c(a_0,1,0,0,a_4))
-
-      # filter solution set to only positive real solution
-      sol_real <- Re(sol[abs(Im(sol)) < 1E-5])
-      sol_final <- sol_real[sol_real > 0] - 273
-      return(sol_final)
+      if(is.finite(a_4) & is.finite(a_0) & sign(a_4) == 1 & sign(a_0) == -1){
+        sol <- polyroot(c(a_0,1,0,0,a_4))
+        # filter solution set to only positive real solution
+        sol_real <- Re(sol[abs(Im(sol)) < 1E-5])
+        sol_final <- sol_real[sol_real > 0] - 273
+        return(sol_final)
+      } else {
+        return(NA_real_)
+      }
     }
 
     # solve quartic
