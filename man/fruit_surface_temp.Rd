@@ -18,7 +18,7 @@ fruit_surface_temp(
   fruit_groundlit_prop = 0,
   fruit_surface_conductance = 5e-05,
   print_all_vars = FALSE,
-  possibly = TRUE
+  possibly = FALSE
 )
 }
 \arguments{
@@ -62,6 +62,5 @@ Fruit surface temperature (°C)
 Calculate fruit surface temperature
 }
 \examples{
-fruit_surface_temp(t_air = 33, wind_speed = 1,
-s_rad = 800, t_dew = 30)
+fruit_surface_temp(t_air = 33, wind_speed = 1, s_rad = 800, t_dew = 30)
 }
