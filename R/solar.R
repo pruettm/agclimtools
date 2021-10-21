@@ -34,7 +34,7 @@ clear_sky <- function(hour, doy, lat, long, time_zone_long, elevation, freq_h = 
   Kt <- 0.95
   Rso <- Ra*exp(-0.0021*P/(Kt*sinPhi))
 
-  Rso <- ifelse(Rso < 0, 0, Rso)
+  Rso <- ifelse(Rso < 0 | is.infinite(Rso), 0, Rso)
   return(Rso)
 }
 
