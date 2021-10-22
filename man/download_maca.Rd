@@ -4,7 +4,13 @@
 \alias{download_maca}
 \title{Download MACA climate data from kamiak}
 \usage{
-download_maca(location, data_folder, kamiak_user_name)
+download_maca(
+  location,
+  data_folder,
+  kamiak_user_name,
+  models = agclimtools::maca_models,
+  climate_proj = agclimtools::climate_projections
+)
 }
 \arguments{
 \item{location}{file name of location to download in format "data_lat_long"}
@@ -12,6 +18,10 @@ download_maca(location, data_folder, kamiak_user_name)
 \item{data_folder}{path to local folder to store downloaded data}
 
 \item{kamiak_user_name}{username used to access kamiak ex. "user.name"}
+
+\item{models}{list of models to download defaults to all models}
+
+\item{climate_proj}{list of climate projections to download (historical, rcp45, rcp85)}
 }
 \description{
 Download MACA climate data from kamiak
