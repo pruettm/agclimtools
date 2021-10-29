@@ -78,8 +78,8 @@ hourly_temp <-
 
     temp <- rep(NA, length(hour))
 
-    temp[hour <= sunrise] <- t_before_sunrise[hour <= sunrise]
     temp[hour <= sunset] <- t_after_sunrise[hour <= sunset]
+    temp[hour <= sunrise] <- t_before_sunrise[hour <= sunrise]
     temp[hour > sunset] <- t_after_sunset[hour > sunset]
 
     return(temp)
@@ -172,6 +172,6 @@ add_hourly_temps <- function(data, lat, hours) {
 
   data %>%
     tidyr::expand_grid(hour = hours) %>%
-    dplyr::mutate(temp = temp)
+    dplyr::mutate(temp = dplyr::if_else(temp < tmin, NA_real_, temp))
 
 }
