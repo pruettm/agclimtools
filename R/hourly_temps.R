@@ -170,8 +170,7 @@ add_hourly_temps <- function(data, lat, hours) {
                 sunrise_next = dplyr::lead(sunrise, n = n_hours))
     )
 
-  data %>%
-    tidyr::expand_grid(hour = hours) %>%
-    dplyr::mutate(temp = dplyr::if_else(temp < tmin, NA_real_, temp))
+  data_hourly <- tidyr::expand_grid(data, hour = hours)
+  return(dplyr::mutate(data_hourly, temp = temp))
 
 }
