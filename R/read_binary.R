@@ -1,7 +1,7 @@
 #' Reads a binary weather file
 #'
 #' @param file_path path to file location
-#' @param num_vars number of variables in data set either 8 or 4
+#' @param num_vars number of variables in data set either 8 or 4 (default 8)
 #' @param hist boolean representing time frame of data TRUE for historical
 #' FALSE for future if missing hist will be detected in file path
 #' @param id Either a string or 'NULL'. If a string, the output will contain
@@ -10,7 +10,7 @@
 #' @return a data frame with date and either 4 or 8 environmental variables
 #' @export
 #'
-read_binary <- function(file_path, num_vars, hist, id = NULL){
+read_binary <- function(file_path, num_vars = 8, hist, id = NULL){
 
   # set hist from file name if missing
   if (missing(hist)) {hist <- grepl("hist", file_path)}
