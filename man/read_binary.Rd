@@ -4,12 +4,12 @@
 \alias{read_binary}
 \title{Reads a binary weather file}
 \usage{
-read_binary(file_path, num_vars, hist, id = NULL)
+read_binary(file_path, num_vars = 8, hist, id = NULL)
 }
 \arguments{
 \item{file_path}{path to file location}
 
-\item{num_vars}{number of variables in data set either 8 or 4}
+\item{num_vars}{number of variables in data set either 8 or 4 (default 8)}
 
 \item{hist}{boolean representing time frame of data TRUE for historical
 FALSE for future if missing hist will be detected in file path}
