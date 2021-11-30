@@ -32,7 +32,12 @@ clear_sky <- function(hour, doy, lat, long, time_zone_long, elevation, freq_h = 
   P <- 101.3*(((293 - 0.0065*elevation)/293)^5.26)
   sinPhi <- sin(lat_r)*sin(SD) + cos(lat_r)*cos(SD)*cos(w)
   Kt <- 0.95
-  Rso <- Ra*exp(-0.0021*P/(Kt*sinPhi))
+
+  # constrain exponent values between -1 and 1
+  exponet <- -0.0021*P/(Kt*sinPhi)
+  exponet <- ifelse(exponet > 1, 1, exponet)
+  exponet <- ifelse(exponet < -1, -1, exponet)
+  Rso <- Ra*exp(exponet)
 
   Rso <- ifelse(Rso < 0 | is.infinite(Rso), 0, Rso)
   return(Rso)
