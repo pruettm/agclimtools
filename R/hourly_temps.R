@@ -125,8 +125,7 @@ sunrise_sunset <- function(doy, lat){
 #'
 #' @importFrom rlang .data
 add_sunrise_sunset <- function(data, lat){
-  data %>%
-    dplyr::mutate(sunrise_sunset(.data$doy, lat))
+  dplyr::mutate(data, sunrise_sunset(.data$doy, lat))
 }
 
 #' Add hourly temps to data frame
